@@ -1,3 +1,4 @@
+
 def procesar_pago_usuario(usuario, tarjeta, monto, pais, es_vip):
     if usuario != None:
         if usuario['activo'] == True:
