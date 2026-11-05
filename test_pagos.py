@@ -47,6 +47,21 @@ class TestProcesarPagoUsuario(unittest.TestCase):
         self.assertTrue(resultado)
         self.assertAlmostEqual(tarjeta["saldo"], 3000 - 1904)
 
+    def test_pago_pais_sin_impuesto(self):
+        # País desconocido o sin impuesto registrado (ej: US -> 0% impuesto)
+        tarjeta = {"saldo": 1000}
+        resultado = procesar_pago_usuario(self.usuario_activo, tarjeta, 500, "US", False)
+        self.assertTrue(resultado)
+        self.assertAlmostEqual(tarjeta["saldo"], 500)
+
+    def test_saldo_exacto(self):
+        # Saldo exactamente igual al monto final con impuestos
+        # Monto 1000 en CO -> 1190
+        tarjeta = {"saldo": 1190}
+        resultado = procesar_pago_usuario(self.usuario_activo, tarjeta, 1000, "CO", False)
+        self.assertTrue(resultado)
+        self.assertEqual(tarjeta["saldo"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
