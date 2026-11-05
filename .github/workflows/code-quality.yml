@@ -1,0 +1,32 @@
+name: Code Quality CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analisis-estatico-y-pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias (Flake8 y Pytest)
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest pytest-cov
+
+      - name: Verificar Complejidad Ciclomática (V(G) <= 5)
+        run: |
+          # Evaluamos solo la complejidad y filtramos los errores de estilo de PEP 8 si se desea
+          flake8 . --max-complexity=5 --select=C901
+
+      - name: Ejecutar Pruebas Unitarias y Validar Cobertura (Mínimo 90%)
+        run: |
+          # Pytest corre las pruebas y exige que la cobertura global no baje del 80%
+          pytest --cov=tests --cov-fail-under=90 tests/
