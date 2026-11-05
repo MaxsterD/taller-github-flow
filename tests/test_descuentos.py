@@ -1,5 +1,5 @@
 import pytest
-from descuentos import calcular_precio_final
+from tests.descuentos import calcular_precio_final
 
 
 def test_cliente_vip_con_cupon():
